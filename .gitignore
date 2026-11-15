@@ -1,5 +1,7 @@
-# --- secrets: NEVER commit ---
-credentials/
+# --- secrets: NEVER commit real credentials ---
+credentials/*
+!credentials/README.md
+!credentials/client_secret.TEMPLATE.json
 
 # --- heavy runtime data (regenerated or user-specific) ---
 .venv/

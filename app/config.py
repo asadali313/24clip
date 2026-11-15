@@ -14,9 +14,12 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# Root layout - everything under D:\AI_Clip_Generator
+# Root layout - portable: the project root is wherever the app/ package
+# lives, so the application runs from any folder or drive. Large data
+# (models, videos, temp) always stays inside this root - never C: system
+# directories.
 # ---------------------------------------------------------------------------
-ROOT = Path(r"D:\AI_Clip_Generator")
+ROOT = Path(__file__).resolve().parent.parent
 APP_DIR = ROOT / "app"
 BIN_DIR = ROOT / "bin"
 MODELS_DIR = ROOT / "models"

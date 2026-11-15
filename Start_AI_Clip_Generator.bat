@@ -1,7 +1,7 @@
 @echo off
 title AI Clip Generator
 rem Launcher for AI Clip Generator - all data stays on D:
-cd /d D:\AI_Clip_Generator
+cd /d "%~dp0"
 ".venv\Scripts\python.exe" -m app.main
 if errorlevel 1 (
     echo.
