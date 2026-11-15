@@ -309,6 +309,20 @@ class SettingsScreen(QWidget):
         self.btn_outdir.setFixedWidth(36)
         self.btn_outdir.clicked.connect(self._pick_outdir)
         vx.addWidget(self.btn_outdir)
+        vx.addWidget(QLabel("Watermark:"))
+        self.txt_wm = QLineEdit()
+        self.txt_wm.setPlaceholderText("optional logo PNG")
+        vx.addWidget(self.txt_wm, 1)
+        self.btn_wm = QPushButton("…")
+        self.btn_wm.setFixedWidth(36)
+        self.btn_wm.clicked.connect(self._pick_wm)
+        vx.addWidget(self.btn_wm)
+        self.sld_wm_op = QSlider(Qt.Horizontal)
+        self.sld_wm_op.setRange(10, 100)
+        self.sld_wm_op.setValue(60)
+        self.sld_wm_op.setFixedWidth(80)
+        vx.addWidget(QLabel("opacity"))
+        vx.addWidget(self.sld_wm_op)
         grid.addWidget(gX, 3, 0, 1, 2)
 
         root.addLayout(grid)
@@ -356,6 +370,9 @@ class SettingsScreen(QWidget):
         self.chk_cleanup.setChecked(getattr(s, "audio_cleanup", False))
         self.cmb_res.setCurrentText(getattr(s, "export_resolution", "1080p"))
         self.txt_outdir.setText(getattr(s, "output_dir", ""))
+        self.txt_wm.setText(getattr(s, "watermark_path", ""))
+        self.sld_wm_op.setValue(int(getattr(s, "watermark_opacity", 0.6)
+                                    * 100))
 
     def _pick_voice(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
@@ -441,12 +458,20 @@ class SettingsScreen(QWidget):
         s.audio_cleanup = self.chk_cleanup.isChecked()
         s.export_resolution = self.cmb_res.currentText()
         s.output_dir = self.txt_outdir.text().strip()
+        s.watermark_path = self.txt_wm.text().strip()
+        s.watermark_opacity = self.sld_wm_op.value() / 100.0
         s.apply_workflow_choices()
 
     def _pick_outdir(self) -> None:
         d = QFileDialog.getExistingDirectory(self, "Choose output directory")
         if d:
             self.txt_outdir.setText(d)
+
+    def _pick_wm(self) -> None:
+        f, _ = QFileDialog.getOpenFileName(self, "Choose logo PNG", "",
+                                           "PNG images (*.png)")
+        if f:
+            self.txt_wm.setText(f)
 
     def _start(self) -> None:
         self.collect()

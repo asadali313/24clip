@@ -33,7 +33,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 
 def main() -> int:
     app = QApplication(sys.argv)
-    app.setApplicationName("AI Clip Generator")
+    app.setApplicationName("ClipNova AI")
     app.setOrganizationName("AI Clip Generator")
     icon_file = config.resource_path("assets/app.png")
     if icon_file.exists():
@@ -44,8 +44,8 @@ def main() -> int:
     ok, free_gb = config.check_drive_space(min_free_gb=1.0)
     if not ok:
         QMessageBox.critical(
-            None, "AI Clip Generator",
-            f"Project drive {config.ROOT} has only {free_gb} GB free.\n"
+            None, "ClipNova AI",
+            f"The project drive has only {free_gb} GB free.\n"
             "The application needs free space to store projects and temp "
             "files. Please free up space and restart.")
         return 1

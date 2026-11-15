@@ -1,6 +1,6 @@
 @echo off
-title AI Clip Generator
-rem Launcher for AI Clip Generator - all data stays on D:
+title ClipNova AI
+rem Launcher for ClipNova AI - all data stays on D:
 cd /d "%~dp0"
 ".venv\Scripts\python.exe" -m app.main
 if errorlevel 1 (

@@ -116,3 +116,26 @@ class FrameSampler:
             return out
         finally:
             cap.release()
+
+
+def broll_suggestions(video, duration: float, exclude: tuple[float, float],
+                      count: int = 3, low_memory: bool = False) -> list[dict]:
+    """Suggest the most visually active moments OUTSIDE the clip's own span
+    as potential B-roll. Honest local heuristic (motion sampling) - the user
+    inserts them manually in the editor."""
+    sampler = FrameSampler(video, low_memory)
+    buckets = 12
+    scored = []
+    step = duration / buckets
+    for i in range(buckets):
+        a, b = i * step, (i + 1) * step
+        if b <= exclude[0] + 2 or a >= exclude[1] - 2:
+            continue
+        if b - a < 1:
+            continue
+        q = sampler.quick_score(a, b)
+        scored.append({"start": round(a, 1), "end": round(b, 1),
+                       "motion": round(q.motion, 3),
+                       "face": q.face_found})
+    scored.sort(key=lambda d: d["motion"], reverse=True)
+    return scored[:count]

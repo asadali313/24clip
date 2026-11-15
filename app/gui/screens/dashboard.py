@@ -36,7 +36,7 @@ class DashboardScreen(QWidget):
         root.setContentsMargins(32, 28, 32, 24)
         root.setSpacing(18)
 
-        title = QLabel("AI Clip Generator")
+        title = QLabel("ClipNova AI")
         title.setObjectName("h1")
         sub = QLabel("Turn long videos into ready-to-post vertical Shorts - "
                      "fully local, no paid services.")

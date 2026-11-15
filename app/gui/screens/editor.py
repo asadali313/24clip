@@ -123,6 +123,13 @@ class EditorScreen(QWidget):
         self.lbl_status.setObjectName("muted")
         self.lbl_status.setWordWrap(True)
         form.addRow("", self.lbl_status)
+        self.btn_broll = QPushButton("Suggest B-roll moments")
+        self.btn_broll.clicked.connect(self._suggest_broll)
+        form.addRow("", self.btn_broll)
+        self.lbl_broll = QLabel("")
+        self.lbl_broll.setObjectName("muted")
+        self.lbl_broll.setWordWrap(True)
+        form.addRow("", self.lbl_broll)
         body.addWidget(form_frame, 3)
         root.addLayout(body, 1)
 
@@ -175,6 +182,28 @@ class EditorScreen(QWidget):
             self.lbl_vo.setText(self.vo_path.name)
 
     # ------------------------------------------------------------------
+    def _suggest_broll(self) -> None:
+        """Visually active moments elsewhere in the video (manual insert)."""
+        if not self.main.project or not self.main.project.source_video:
+            return
+        try:
+            from ...core.visual import broll_suggestions
+            md_dur = float(self.main.project.data.get("metadata", {})
+                           .get("duration", 0))
+            sugs = broll_suggestions(self.main.project.source_video,
+                                     md_dur,
+                                     (self.spin_start.value(),
+                                      self.spin_end.value()))
+            if sugs:
+                txt = "B-roll ideas (most active scenes): " + "; ".join(
+                    f"{s['start']:.0f}-{s['end']:.0f}s"
+                    + (" (face)" if s["face"] else "") for s in sugs)
+            else:
+                txt = "No distinctly more active scenes found."
+            self.lbl_broll.setText(txt)
+        except Exception as e:  # noqa: BLE001
+            self.lbl_broll.setText(f"B-roll scan failed: {e}")
+
     def _render(self) -> None:
         if not self.cand or not self.main.project:
             return

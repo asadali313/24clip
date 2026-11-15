@@ -124,6 +124,9 @@ class Settings:
     export_resolution: str = "1080p"     # 1080p | 720p
     output_dir: str = ""                 # optional custom export directory
     audio_cleanup: bool = False          # loudnorm on the final mix
+    watermark_path: str = ""             # optional logo PNG overlay
+    watermark_opacity: float = 0.6       # 0..1
+    watermark_corner: str = "top-right"  # top-right|top-left|bottom-right|bottom-left
     music_enabled: bool = True           # background music on/off (explicit)
     music_category: str = "ambient"
     music_fade: float = 2.5              # seconds of fade-in/out (0 = off)
@@ -193,6 +196,9 @@ class Settings:
 def resource_path(rel: str) -> Path:
     """Path to a bundled app resource (icons, fonts)."""
     return APP_DIR / rel
+
+
+APP_NAME = "ClipNova AI"
 
 
 def app_version() -> str:

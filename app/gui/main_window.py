@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.analysis_worker: AnalysisWorker | None = None
         self.export_worker: ExportWorker | None = None
 
-        self.setWindowTitle("AI Clip Generator")
+        self.setWindowTitle("ClipNova AI")
         self.resize(1280, 800)
         self.setMinimumSize(QSize(1080, 700))
 

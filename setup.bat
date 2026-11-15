@@ -1,9 +1,9 @@
 @echo off
 setlocal
-title AI Clip Generator - Setup
+title ClipNova AI - Setup
 cd /d "%~dp0"
 echo ============================================================
-echo   AI Clip Generator - First-time Setup
+echo   ClipNova AI - First-time Setup
 echo   This prepares everything automatically on this PC.
 echo ============================================================
 echo.
@@ -83,7 +83,7 @@ if not exist "bin\ffmpeg.exe" (
 
 echo.
 echo ============================================================
-echo   Setup complete! Launching AI Clip Generator...
+echo   Setup complete! Launching ClipNova AI...
 echo   Next time just double-click Start_AI_Clip_Generator.bat
 echo ============================================================
 start "" ".venv\Scripts\pythonw.exe" -m app.main

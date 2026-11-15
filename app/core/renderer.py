@@ -287,6 +287,25 @@ def render_clip(video: Path, start: float, end: float, out_mp4: Path,
     if ass_file is not None:
         fspath = ass_file.resolve().as_posix().replace(":", "\\:")
         vf += f",subtitles='{fspath}'"
+    # optional logo/watermark overlay (separate input, appended last)
+    wm_input: list[str] = []
+    wm = getattr(settings, "watermark_path", "") if settings else ""
+    if wm and Path(wm).exists():
+        op = max(0.05, min(1.0, float(getattr(settings,
+                                              "watermark_opacity", 0.6))))
+        corner = getattr(settings, "watermark_corner", "top-right")
+        pos = {"top-right": "W-w-24:24", "top-left": "24:24",
+               "bottom-right": "W-w-24:H-h-24",
+               "bottom-left": "24:H-h-24"}.get(corner, "W-w-24:24")
+        wm_idx = 1 + (1 if (voiceover is not None and
+                            Path(voiceover).exists()) else 0) + (
+            1 if (bgm is not None and Path(bgm).exists()) else 0)
+        wm_input = ["-i", str(wm)]
+        vf = (f"[0:v]{vf}[vbase];"
+              f"[{wm_idx}:v]scale=iw*0.5:-1,format=rgba,"
+              f"colorchannelmixer=aa={op:.2f}[wmark];"
+              f"[vbase][wmark]overlay={pos}")
+
 
     # ---- inputs first (options apply to the next file they precede) -------
     has_vo = voiceover is not None and voiceover.exists()
@@ -296,10 +315,16 @@ def render_clip(video: Path, start: float, end: float, out_mp4: Path,
         args += ["-i", str(voiceover)]
     if has_bgm:
         args += ["-stream_loop", "-1", "-i", str(bgm)]
+    if wm_input:
+        args += wm_input
 
     # ---- output options (video) --------------------------------------------
-    args += [
-        "-vf", vf,
+    if vf.startswith("[0:v]"):
+        # watermark overlay graph references an input label: needs
+        # -filter_complex, not -vf
+        args += ["-filter_complex", vf]
+    else:
+        args += ["-vf", vf,
         "-r", "30",
         "-c:v", "libx264", "-preset", q["preset"], "-crf", q["crf"],
         "-pix_fmt", "yuv420p",
