@@ -1,0 +1,39 @@
+# --- secrets: NEVER commit ---
+credentials/
+
+# --- heavy runtime data (regenerated or user-specific) ---
+.venv/
+bin/
+models/
+downloads/
+logs/
+temp/
+projects/*/audio/
+projects/*/exports/
+projects/*/clips/
+projects/*/voiceovers/
+projects/*/candidates/
+projects/*/analysis/
+projects/*/transcripts/
+
+# tests: keep scripts, exclude media and artifacts
+tests/*.mp4
+tests/*.wav
+tests/*.f32
+tests/*.jpg
+
+# python
+__pycache__/
+*.pyc
+
+# generated assets (regenerated on demand)
+app/assets/music/
+app/assets/caption_previews/*.png
+
+# --- user-specific local data ---
+projects/
+publishing/jobs.json
+settings.json
+*.mp4
+downloads/
+publishing/thumbs/

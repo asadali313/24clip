@@ -1,0 +1,10 @@
+@echo off
+title AI Clip Generator
+rem Launcher for AI Clip Generator - all data stays on D:
+cd /d D:\AI_Clip_Generator
+".venv\Scripts\python.exe" -m app.main
+if errorlevel 1 (
+    echo.
+    echo The application exited with an error. Check D:\AI_Clip_Generator\logs
+    pause
+)
